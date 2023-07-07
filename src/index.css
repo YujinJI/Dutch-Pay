@@ -1,3 +1,22 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+@font-face {
+  font-family: 'PoorStory';
+  src: url('../public/fonts/PoorStory.ttf');
+}
+
+@font-face {
+  font-family: 'Noto Sans KR';
+  src: url('../public/fonts/NotoSansKR-Light.otf');
+}
+
+@font-face {
+  font-family: 'DoHyeon';
+  src: url('../public/fonts/DoHyeon-Regular.ttf');
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -5,9 +24,4 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
 }
