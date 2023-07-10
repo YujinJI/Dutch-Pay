@@ -1,11 +1,15 @@
 import React, { useContext, useState } from 'react';
 import AuthContext from '../context/AuthContext';
-import { Link } from 'react-router-dom';
+import { Link, redirect } from 'react-router-dom';
 
 const Login = props => {
   const { user, isLoggedIn, signInWithEmail, logInWithGoogle, logOut } = useContext(AuthContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  if (isLoggedIn) {
+    return redirect('/');
+  }
 
   const handleEmailChange = e => {
     setEmail(e.target.value);
