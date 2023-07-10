@@ -1,7 +1,7 @@
 import './App.css';
 import Header from './components/Header';
 import Login from './components/Login';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import Signup from './components/Signup';
 import React, { useContext } from 'react';
 import AuthContext from './context/AuthContext';
@@ -16,7 +16,7 @@ function App() {
         <Header />
         <Routes>
           {isLoggedIn ? <Route path="/" element={<SearchRoom />} /> : <Route path="/" element={<Login />} />}
-          <Route path="/signup" element={<Signup />} />
+          <Route path="/signup" element={isLoggedIn ? <Navigate to="/" /> : <Signup />} />
         </Routes>
       </div>
     </BrowserRouter>

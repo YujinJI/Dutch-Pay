@@ -3,7 +3,7 @@ import AuthContext from '../context/AuthContext';
 import { Link } from 'react-router-dom';
 
 const Login = props => {
-  const { user, isLoggedIn, logInWithEmail, logInWithGoogle } = useContext(AuthContext);
+  const { logInWithEmail, logInWithGoogle } = useContext(AuthContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
