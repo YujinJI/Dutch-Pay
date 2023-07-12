@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import AuthContext from '../context/AuthContext';
-import { Link, redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const Login = props => {
   const { signInWithEmail, logInWithGoogle } = useContext(AuthContext);
@@ -26,7 +26,7 @@ const Login = props => {
           <h2 className="card-title mx-auto text-2xl font-extrabold mb-4">회원가입</h2>
           <input
             type="text"
-            placeholder="이름을 입력해 주세요"
+            placeholder="이메일을 입력해 주세요"
             className="input input-bordered w-full max-w-xs text-sm"
             onChange={handleEmailChange}
           />
