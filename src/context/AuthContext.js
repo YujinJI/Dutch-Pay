@@ -26,7 +26,11 @@ export const AuthContextProvider = ({ children }) => {
       .then(userCredential => {
         // Signed in
         const user = userCredential.user;
-        console.log(user);
+        if (!user.displayName) {
+          const displayName = prompt('이름을 입력하세요');
+          user.displayName = displayName;
+        }
+        console.log('logInWithEmail', user);
       })
       .catch(error => {
         console.log(error);
@@ -38,6 +42,11 @@ export const AuthContextProvider = ({ children }) => {
       .then(userCredential => {
         // Signed in
         const user = userCredential.user;
+        console.log('logInWithEmail', user);
+        if (!user.displayName) {
+          const displayName = prompt('이름을 입력하세요');
+          user.displayName = displayName;
+        }
       })
       .catch(error => {
         console.log(error);
@@ -46,7 +55,9 @@ export const AuthContextProvider = ({ children }) => {
 
   const logInWithGoogle = () => {
     const provider = new GoogleAuthProvider();
-    signInWithPopup(authService, provider).then(user => console.log(user));
+    signInWithPopup(authService, provider).then(userCredential => {
+      console.log('logInWithGoogle', userCredential.user);
+    });
   };
 
   const logOut = () => {
@@ -64,7 +75,7 @@ export const AuthContextProvider = ({ children }) => {
 
   useEffect(() => {
     const stateChange = onAuthStateChanged(authService, currentUser => {
-      console.log(currentUser);
+      console.log('현재 유저', currentUser);
       setUser(currentUser);
     });
 

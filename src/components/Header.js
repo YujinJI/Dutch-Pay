@@ -38,10 +38,11 @@ const Header = props => {
             </label>
             <div tabIndex={0} className="mt-3 z-[1] card card-compact dropdown-content w-52 bg-base-100 shadow">
               <div className="card-body">
-                <div className="card-actions items-baseline">
-                  <span className="font-bold text-lg">내 계좌</span>
+                <div className="card-actions gap-0 items-baseline">
+                  <span className="font-bold text-lg">{user.displayName}</span>
+                  <span className="font-bold text-md">님 계좌</span>
                   <button
-                    className="btn btn-link btn-xs text-black underline p-0"
+                    className="btn btn-link btn-xs text-black underline pl-1"
                     onClick={() => window.account_modal.showModal()}
                   >
                     수정
