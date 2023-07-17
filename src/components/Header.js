@@ -1,6 +1,7 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import AvatarImage from '../assets/images/avatar.jpeg';
 import AuthContext from '../context/AuthContext';
+import { getUserInfo, updateUserAccount } from '../service/database';
 
 const Header = props => {
   const { user, isLoggedIn, logOut } = useContext(AuthContext);
@@ -23,6 +24,60 @@ const Header = props => {
     '우체국',
   ];
 
+  const [account, setAccount] = useState('');
+  const [bank, setBank] = useState('');
+  const [userInfo, setUserInfo] = useState(null); // userInfo를 저장할 상태 추가
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const userAccountInfo = await getUserInfo(user.uid); // getUserInfo 함수 호출하여 데이터 가져오기
+        setUserInfo(userAccountInfo); // 가져온 데이터를 상태에 저장
+        if (userAccountInfo && userAccountInfo.accountInfo) {
+          setAccount(userAccountInfo.accountInfo.account);
+          setBank(userAccountInfo.accountInfo.bank);
+        } else {
+          const accountInfo = {
+            bank: '',
+            account: '',
+          };
+          updateUserAccount(user.uid, accountInfo);
+        }
+      } catch (error) {
+        console.error('Failed to fetch user Info: ', error);
+      }
+    };
+
+    if (isLoggedIn && user) {
+      // user가 존재할 때만 fetchUserInfo 함수 호출
+      fetchUserInfo();
+    }
+  }, [isLoggedIn, user]);
+
+  useEffect(() => {
+    console.log('userInfo', userInfo);
+    if (userInfo && userInfo.accountInfo) {
+      setAccount(userInfo.accountInfo.account);
+      setBank(userInfo.accountInfo.bank);
+    }
+  }, [userInfo]);
+
+  useEffect(() => {
+    const accountInfo = {
+      bank: bank,
+      account: account,
+    };
+    updateUserAccount(user.uid, accountInfo);
+  }, [bank, account]);
+
+  const handleAccountChange = e => {
+    setAccount(e.target.value);
+  };
+
+  const handleBankChange = e => {
+    setBank(e.target.value);
+  };
+
   return (
     <div className="navbar bg-base-100 shadow-sm fixed">
       <div className="flex-1">
@@ -39,7 +94,7 @@ const Header = props => {
             <div tabIndex={0} className="mt-3 z-[1] card card-compact dropdown-content w-52 bg-base-100 shadow">
               <div className="card-body">
                 <div className="card-actions gap-0 items-baseline">
-                  <span className="font-bold text-lg">{user.displayName}</span>
+                  <span className="font-bold text-lg">{userInfo ? userInfo.name : ''}</span>
                   <span className="font-bold text-md">님 계좌</span>
                   <button
                     className="btn btn-link btn-xs text-black underline pl-1"
@@ -51,8 +106,12 @@ const Header = props => {
                     <form method="dialog" className="modal-box">
                       <h2 className="font-bold text-2xl">계좌번호를 입력하세요</h2>
                       <p className="pb-4 pt-2 text-slate-500">※ 동료들에게 공유되는 계좌번호입니다.</p>
-                      <select className="select select-bordered w-full max-w-xs my-2 text-base">
-                        <option>은행을 선택해 주세요</option>
+                      <select
+                        className="select select-bordered w-full max-w-xs my-2 text-base"
+                        onChange={handleBankChange}
+                        value={bank}
+                      >
+                        <option value="">은행을 선택해 주세요</option>
                         {bankInfo.map((bank, index) => (
                           <option key={index}>{bank}</option>
                         ))}
@@ -61,6 +120,8 @@ const Header = props => {
                         type="text"
                         placeholder="계좌번호를 입력해 주세요"
                         className="input input-bordered w-full max-w-xs my-2 text-base"
+                        onChange={handleAccountChange}
+                        value={account}
                       />
                       <div className="modal-action">
                         <button className="btn bg-slate-700 hover:bg-slate-600 text-white">완료</button>
@@ -71,7 +132,9 @@ const Header = props => {
                     </form>
                   </dialog>
                 </div>
-                <span className="text-info">농협: 123-4567-8901-23</span>
+                <span className="text-info">
+                  {bank} {account}
+                </span>
                 <div className="card-actions">
                   <button className="btn bg-slate-700 btn-block text-white hover:bg-slate-600" onClick={logOut}>
                     로그아웃

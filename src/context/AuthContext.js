@@ -1,13 +1,14 @@
-import { createContext, useState, useEffect } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import {
+  createUserWithEmailAndPassword,
   GoogleAuthProvider,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
-  onAuthStateChanged,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
 } from 'firebase/auth';
 import { authService } from '../service/firebase';
+import { getUserInfo, saveUserInfo, updateUserAccount } from '../service/database';
 
 const AuthContext = createContext({
   user: {},
@@ -16,21 +17,26 @@ const AuthContext = createContext({
   logInWithEmail: () => {},
   logInWithGoogle: () => {},
   logOut: () => {},
+  userInfo: {},
 });
 
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState({});
+  const [userInfo, setUserInfo] = useState([]);
 
   const signInWithEmail = (email, password) => {
     createUserWithEmailAndPassword(authService, email, password)
       .then(userCredential => {
-        // Signed in
         const user = userCredential.user;
         if (!user.displayName) {
-          const displayName = prompt('이름을 입력하세요');
-          user.displayName = displayName;
+          user.displayName = prompt('이름을 입력하세요');
         }
         console.log('logInWithEmail', user);
+        const userInfo = {
+          name: user.displayName,
+          profile: user.photoURL,
+        };
+        saveUserInfo(user.uid, userInfo);
       })
       .catch(error => {
         console.log(error);
@@ -43,10 +49,6 @@ export const AuthContextProvider = ({ children }) => {
         // Signed in
         const user = userCredential.user;
         console.log('logInWithEmail', user);
-        if (!user.displayName) {
-          const displayName = prompt('이름을 입력하세요');
-          user.displayName = displayName;
-        }
       })
       .catch(error => {
         console.log(error);
@@ -57,6 +59,12 @@ export const AuthContextProvider = ({ children }) => {
     const provider = new GoogleAuthProvider();
     signInWithPopup(authService, provider).then(userCredential => {
       console.log('logInWithGoogle', userCredential.user);
+      const user = userCredential.user;
+      const userInfo = {
+        name: user.displayName,
+        profile: user.photoURL,
+      };
+      saveUserInfo(user.uid, userInfo);
     });
   };
 
@@ -71,18 +79,25 @@ export const AuthContextProvider = ({ children }) => {
     logInWithEmail,
     logInWithGoogle,
     logOut,
+    userInfo,
   };
 
   useEffect(() => {
-    const stateChange = onAuthStateChanged(authService, currentUser => {
+    const stateChange = onAuthStateChanged(authService, async currentUser => {
       console.log('현재 유저', currentUser);
       setUser(currentUser);
+      if (currentUser) {
+        const account = await getUserInfo(currentUser.uid);
+        setUserInfo(account);
+      }
     });
 
     return () => {
       stateChange();
     };
   }, []);
+
+  console.log('userInfo => ', userInfo);
 
   return <AuthContext.Provider value={authContext}>{children}</AuthContext.Provider>;
 };
