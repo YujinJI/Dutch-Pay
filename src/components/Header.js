@@ -79,7 +79,7 @@ const Header = props => {
   };
 
   return (
-    <div className="navbar bg-base-100 shadow-sm fixed">
+    <div className="navbar bg-base-100 shadow-sm fixed z-10">
       <div className="flex-1">
         <a className="btn btn-ghost normal-case text-xl font-doHyeon font-thin">💸 더치페이</a>
       </div>
@@ -133,7 +133,7 @@ const Header = props => {
                   </dialog>
                 </div>
                 <span className="text-info">
-                  {bank} {account}
+                  {bank}/{account}
                 </span>
                 <div className="card-actions">
                   <button className="btn bg-slate-700 btn-block text-white hover:bg-slate-600" onClick={logOut}>

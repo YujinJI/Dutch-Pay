@@ -1,7 +1,17 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const SearchRoom = props => {
   const [roomCode, setRoomCode] = useState('');
+
+  const generateRandomString = () => {
+    return 'random_string';
+  };
+
+  const handleClickCreateRoom = () => {
+    const randomString = generateRandomString();
+    window.location.href = `/rooms/${randomString}`;
+  };
 
   const handleCodeChange = e => {
     setRoomCode(e.target.value);
@@ -43,7 +53,9 @@ const SearchRoom = props => {
                   className="input input-bordered w-full max-w-xs my-2 text-base"
                 />
                 <div className="modal-action">
-                  <button className="btn bg-slate-700 hover:bg-slate-600 text-white">완료</button>
+                  <button className="btn bg-slate-700 hover:bg-slate-600 text-white" onClick={handleClickCreateRoom}>
+                    <Link to={`rooms/${generateRandomString()}`}>완료</Link>
+                  </button>
                 </div>
               </form>
             </dialog>

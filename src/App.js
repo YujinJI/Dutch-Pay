@@ -6,6 +6,7 @@ import Signup from './components/Signup';
 import React, { useContext } from 'react';
 import AuthContext from './context/AuthContext';
 import SearchRoom from './components/SearchRoom';
+import Room from './components/Room';
 
 function App() {
   const { user, isLoggedIn } = useContext(AuthContext);
@@ -17,6 +18,7 @@ function App() {
         <Routes>
           {isLoggedIn ? <Route path="/" element={<SearchRoom />} /> : <Route path="/" element={<Login />} />}
           <Route path="/signup" element={isLoggedIn ? <Navigate to="/" /> : <Signup />} />
+          <Route path="/rooms/:randomString" element={<Room />} />
         </Routes>
       </div>
     </BrowserRouter>
