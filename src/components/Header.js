@@ -1,7 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
-import AvatarImage from '../assets/images/avatar.jpeg';
+import AvatarImage from '../assets/images/avatar.png';
 import AuthContext from '../context/AuthContext';
 import { getUserInfo, updateUserAccount } from '../service/database';
+import { Link } from 'react-router-dom';
 
 const Header = props => {
   const { user, isLoggedIn, logOut } = useContext(AuthContext);
@@ -59,6 +60,9 @@ const Header = props => {
     if (userInfo && userInfo.accountInfo) {
       setAccount(userInfo.accountInfo.account);
       setBank(userInfo.accountInfo.bank);
+    } else {
+      setAccount('(계좌)');
+      setBank('(은행)');
     }
   }, [userInfo]);
 
@@ -88,7 +92,7 @@ const Header = props => {
           <div className="dropdown dropdown-end">
             <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
               <div className="w-10 rounded-full">
-                <img src={AvatarImage} alt="avatar image" />
+                {user.photoURL ? <img src={user.photoURL} /> : <img src={AvatarImage} alt="avatar image" />}
               </div>
             </label>
             <div tabIndex={0} className="mt-3 z-[1] card card-compact dropdown-content w-52 bg-base-100 shadow">
@@ -137,7 +141,7 @@ const Header = props => {
                 </span>
                 <div className="card-actions">
                   <button className="btn bg-slate-700 btn-block text-white hover:bg-slate-600" onClick={logOut}>
-                    로그아웃
+                    <Link to="/">로그아웃</Link>
                   </button>
                 </div>
               </div>
