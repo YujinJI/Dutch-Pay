@@ -15,7 +15,6 @@ const MemberList = ({ usersName, usersAccount, user }) => {
               <label tabIndex={0} className="btn btn-ghost btn-circle avatar mx-2">
                 <div className="w-10 rounded-full">
                   {user.photoURL ? <img src={user.photoURL} /> : <img src={AvatarImage} alt="avatar image" />}
-                  {/*<img src={AvatarImage} alt="avatar image" />*/}
                 </div>
               </label>
               <p className="mx-2 text-white">{userName}</p>
