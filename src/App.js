@@ -9,7 +9,7 @@ import SearchRoom from './components/SearchRoom';
 import Room from './components/Room';
 
 function App() {
-  const { user, isLoggedIn } = useContext(AuthContext);
+  const { isLoggedIn } = useContext(AuthContext);
   console.log('현재 로그인 상태', isLoggedIn);
   return (
     <BrowserRouter>
@@ -18,7 +18,7 @@ function App() {
         <Routes>
           {isLoggedIn ? <Route path="/" element={<SearchRoom />} /> : <Route path="/" element={<Login />} />}
           <Route path="/signup" element={isLoggedIn ? <Navigate to="/" /> : <Signup />} />
-          <Route path="/rooms/:randomString" element={<Room />} />
+          <Route path="/rooms/:roomCode" element={<Room />} />
         </Routes>
       </div>
     </BrowserRouter>
